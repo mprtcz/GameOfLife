@@ -12,6 +12,10 @@ public class Tile extends Button {
     boolean isAlive = false;
     private Status tileStatus = Status.DEAD;
 
+    public Status getTileStatus() {
+        return tileStatus;
+    }
+
     public Tile() {
         setMaxSize(MAX_SIZE, MAX_SIZE);
         this.setOnAction(event -> setOppositeState());
@@ -28,6 +32,17 @@ public class Tile extends Button {
 
     public void revive() {
         tileStatus = Status.ALIVE;
+        colorTheButton();
+    }
+
+    public void changeStatus(Status newStatus) {
+        if(newStatus == Status.DEAD) {
+            if(tileStatus == Status.ALIVE) {
+                tileStatus = Status.VISITED;
+            }
+        } else {
+            tileStatus = newStatus;
+        }
         colorTheButton();
     }
 

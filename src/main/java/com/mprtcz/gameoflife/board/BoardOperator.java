@@ -1,10 +1,13 @@
 package com.mprtcz.gameoflife.board;
 
 import com.mprtcz.gameoflife.game.Tile;
+import com.mprtcz.gameoflife.styles.Status;
 import javafx.application.Platform;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
+
+import java.util.Map;
 
 import static com.mprtcz.gameoflife.calc.Adjacency.getIndexFromXY;
 
@@ -22,10 +25,24 @@ public class BoardOperator {
         this.board = board;
     }
 
+    public void applyNewStatuses(Map<Integer, Status> statusesMap) {
+        System.out.println("statusesMap = " + statusesMap);
+        for (Map.Entry<Integer, Status> entry: statusesMap.entrySet()){
+            board.getBoard().get(entry.getKey()).changeStatus(entry.getValue());
+        }
+    }
+
+    public Map<Integer, Tile> getBoardsMap() {
+        return board.getBoard();
+    }
+
+    public int getWidth() {
+        return width;
+    }
+
     public void initializeBoard() {
         fillTheBoard(board.getGridPane());
     }
-
 
     private void fillTheBoard(GridPane gridPane) {
         for (int column = 0; column < width; column++) {

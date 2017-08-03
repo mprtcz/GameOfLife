@@ -19,9 +19,12 @@ public class Controller {
     private Button startButton;
     @FXML
     private Slider sizeSlider;
+    @FXML
+    private Slider speedSlider;
 
     private int size;
     private BoardOperator boardOperator;
+    private Game game;
 
     @FXML
     void initialize() {
@@ -33,9 +36,15 @@ public class Controller {
 
     @FXML
     void onStartButtonCLicked() {
-        //run the game
         sizeSlider.setDisable(true);
-        Game game = new Game(boardOperator);
+        game = new Game(boardOperator);
+        new Thread(() -> {
+            try {
+                game.runTheGame();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }).start();
     }
 
     @FXML
@@ -56,5 +65,11 @@ public class Controller {
         this.mainGridPane.getChildren().clear();
         this.mainGridPane.getRowConstraints().clear();
         this.mainGridPane.getColumnConstraints().clear();
+    }
+
+    @FXML
+    void onTerminateButtonClicked(){
+        game.terminate();
+        sizeSlider.setDisable(false);
     }
 }

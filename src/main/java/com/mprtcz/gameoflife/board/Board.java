@@ -11,6 +11,10 @@ import java.util.Map;
  */
 public class Board {
 
+    public void setBoard(Map<Integer, Tile> board) {
+        this.board = board;
+    }
+
     Map<Integer, Tile> board;
     GridPane gridPane;
 
