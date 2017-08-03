@@ -24,6 +24,8 @@
             <Button fx:id="startButton" mnemonicParsing="false" onAction="#onStartButtonCLicked" text="Start" />
             <Label text="Set board size: " />
             <Slider fx:id="sizeSlider" blockIncrement="1.0" max="30.0" min="10.0" onDragDetected="#onSizeSliderChanged" value="10.0" />
+            <Button fx:id="randomizeButton" mnemonicParsing="false" onAction="#onRandomizeButtonClicked" text="Randomize" />
+            <Button mnemonicParsing="false" onAction="#onClearButtonClicked" text="Clear" />
          </children>
          <padding>
             <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />

@@ -73,4 +73,14 @@ public class Controller {
         game.terminate();
         sizeSlider.setDisable(false);
     }
+
+    @FXML
+    void onRandomizeButtonClicked() {
+        boardOperator.randomizeTiles();
+    }
+
+    @FXML
+    void onClearButtonClicked() {
+        boardOperator.clearBoard();
+    }
 }

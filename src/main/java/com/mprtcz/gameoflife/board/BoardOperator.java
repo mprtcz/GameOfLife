@@ -9,6 +9,7 @@ import javafx.scene.layout.RowConstraints;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 
 import static com.mprtcz.gameoflife.calc.Adjacency.getIndexFromXY;
 
@@ -20,7 +21,7 @@ public class BoardOperator {
     private static final double FIELD_SIZE = 30;
     private int width;
     private Board board;
-    Map<Integer, Status> oldStatusesMap = new HashMap<>();
+    private Map<Integer, Status> oldStatusesMap = new HashMap<>();
 
     public BoardOperator(int width, Board board) {
         this.width = width;
@@ -28,7 +29,6 @@ public class BoardOperator {
     }
 
     public boolean applyNewStatuses(Map<Integer, Status> statusesMap) {
-        System.out.println("statusesMap = " + statusesMap);
         if(statusesMap.equals(oldStatusesMap)) {return false;}
         for (Map.Entry<Integer, Status> entry: statusesMap.entrySet()){
             board.getBoard().get(entry.getKey()).changeStatus(entry.getValue());
@@ -68,5 +68,17 @@ public class BoardOperator {
         Tile tile = new Tile();
         board.getBoard().put(getIndexFromXY(row, column, width), tile);
         Platform.runLater(() -> board.getGridPane().add(tile, column, row));
+    }
+
+    public void randomizeTiles() {
+        Random r = new Random();
+        board.getBoard().entrySet().stream()
+                .filter(integerTileEntry -> r.nextBoolean() && r.nextBoolean())
+                .forEach(integerTileEntry -> integerTileEntry.getValue().changeStatus(Status.ALIVE));
+    }
+
+    public void clearBoard() {
+        board.getBoard().entrySet().forEach(integerTileEntry ->
+                integerTileEntry.getValue().changeStatus(Status.DEFAULT));
     }
 }

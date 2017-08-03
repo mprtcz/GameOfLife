@@ -8,9 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.mprtcz.gameoflife.styles.Status.ALIVE;
-import static com.mprtcz.gameoflife.styles.Status.DEAD;
-import static com.mprtcz.gameoflife.styles.Status.VISITED;
+import static com.mprtcz.gameoflife.styles.Status.*;
 
 /**
  * @author Michal_Partacz
@@ -31,9 +29,12 @@ public class Game {
         while(isRunning) {
             Thread.sleep(delay);
             Map<Integer, Status> newStatusesMap = new HashMap<>();
-            for (Map.Entry<Integer, Tile> entry : boardOperator.getBoardsMap().entrySet()) {
-                newStatusesMap.put(entry.getKey(), calculateNewStatusOf(entry.getKey()));
-            }
+//            for (Map.Entry<Integer, Tile> entry : boardOperator.getBoardsMap().entrySet()) {
+//                newStatusesMap.put(entry.getKey(), calculateNewStatusOf(entry.getKey()));
+//            }
+            boardOperator.getBoardsMap().entrySet().parallelStream()
+                    .forEach(integerTileEntry -> newStatusesMap.put(integerTileEntry.getKey(),
+                            calculateNewStatusOf(integerTileEntry.getKey())));
             isRunning = boardOperator.applyNewStatuses(newStatusesMap);
         }
     }
