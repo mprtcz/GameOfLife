@@ -9,7 +9,6 @@ import javafx.stage.Stage;
 
 /**
  * @author Michal_Partacz
- * @since 03.08.17
  */
 public class App extends Application {
     @Override
@@ -18,7 +17,7 @@ public class App extends Application {
         Parent root = loader.load();
         Scene scene = new Scene(root);
 
-        primaryStage.setTitle("Battleships");
+        primaryStage.setTitle("Game of Life");
         primaryStage.setScene(scene);
         primaryStage.show();
     }

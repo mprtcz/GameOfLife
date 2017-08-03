@@ -24,7 +24,7 @@ public class AppLogger {
             return;
         }
         try {
-            handler = MyFileHandler.createLoggerInstance("BattleshipLog.log", false);
+            handler = MyFileHandler.createLoggerInstance("gameoflife.log", false);
         } catch (IOException e) {
             logger.log(Level.WARNING, "Could not create file", e);
         }
@@ -36,7 +36,7 @@ public class AppLogger {
 
     private AppLogger() {}
 
-    static class MyFileHandler extends FileHandler {
+    private static class MyFileHandler extends FileHandler {
 
         static MyFileHandler createLoggerInstance(String filename, boolean append) throws IOException {
             String folderName = "logs";
