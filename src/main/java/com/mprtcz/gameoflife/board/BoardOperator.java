@@ -7,6 +7,7 @@ import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import static com.mprtcz.gameoflife.calc.Adjacency.getIndexFromXY;
@@ -19,17 +20,21 @@ public class BoardOperator {
     private static final double FIELD_SIZE = 30;
     private int width;
     private Board board;
+    Map<Integer, Status> oldStatusesMap = new HashMap<>();
 
     public BoardOperator(int width, Board board) {
         this.width = width;
         this.board = board;
     }
 
-    public void applyNewStatuses(Map<Integer, Status> statusesMap) {
+    public boolean applyNewStatuses(Map<Integer, Status> statusesMap) {
         System.out.println("statusesMap = " + statusesMap);
+        if(statusesMap.equals(oldStatusesMap)) {return false;}
         for (Map.Entry<Integer, Status> entry: statusesMap.entrySet()){
             board.getBoard().get(entry.getKey()).changeStatus(entry.getValue());
         }
+        oldStatusesMap = statusesMap;
+        return true;
     }
 
     public Map<Integer, Tile> getBoardsMap() {

@@ -34,7 +34,7 @@ public class Game {
             for (Map.Entry<Integer, Tile> entry : boardOperator.getBoardsMap().entrySet()) {
                 newStatusesMap.put(entry.getKey(), calculateNewStatusOf(entry.getKey()));
             }
-            boardOperator.applyNewStatuses(newStatusesMap);
+            isRunning = boardOperator.applyNewStatuses(newStatusesMap);
         }
     }
 
@@ -42,8 +42,8 @@ public class Game {
         isRunning = false;
     }
 
-    private void setDelay(int delay) {
-        this.delay = delay;
+    public void setDelay(double delay) {
+        this.delay = (int) delay;
     }
 
     private Status calculateNewStatusOf(int tileIndex) {

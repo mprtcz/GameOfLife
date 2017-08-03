@@ -38,6 +38,7 @@ public class Controller {
     void onStartButtonCLicked() {
         sizeSlider.setDisable(true);
         game = new Game(boardOperator);
+        game.setDelay(speedSlider.getValue());
         new Thread(() -> {
             try {
                 game.runTheGame();
@@ -58,7 +59,7 @@ public class Controller {
 
     @FXML
     void onSpeedSliderChanged() {
-        //change the speed of execution
+        game.setDelay(speedSlider.getValue());
     }
 
     private void clearTheGridPane() {

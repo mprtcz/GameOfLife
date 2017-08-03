@@ -7,7 +7,7 @@ public enum Status {
     ALIVE("-fx-base: #000000;"),
     DEAD("-fx-base: #ffffff;"),
     DEFAULT("-fx-base: #ffffff;"),
-    VISITED("-fx-base: #ffffff;");
+    VISITED("-fx-base: #afed87;");
 
     String style;
 
