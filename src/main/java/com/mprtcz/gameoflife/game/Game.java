@@ -2,12 +2,14 @@ package com.mprtcz.gameoflife.game;
 
 import com.mprtcz.gameoflife.board.BoardOperator;
 import com.mprtcz.gameoflife.calc.Adjacency;
+import com.mprtcz.gameoflife.logger.AppLogger;
 import com.mprtcz.gameoflife.styles.Status;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.mprtcz.gameoflife.logger.AppLogger.DEFAULT_LEVEL;
 import static com.mprtcz.gameoflife.styles.Status.*;
 
 /**
@@ -56,10 +58,12 @@ public class Game {
     }
 
     Map<Integer, Status> computeMultithreaded(Map<Integer, Tile> currentBoard) {
+        AppLogger.logger.log(DEFAULT_LEVEL, "Size of the input map = " + currentBoard.size());
         Map<Integer, Status> newStatusesMap = new HashMap<>();
         currentBoard.entrySet().parallelStream()
                 .forEach(integerTileEntry -> newStatusesMap.put(integerTileEntry.getKey(),
                         calculateNewStatusOf(currentBoard, integerTileEntry.getKey())));
+        AppLogger.logger.log(DEFAULT_LEVEL, "Size of the computed map = " + newStatusesMap.size());
         return newStatusesMap;
     }
 
