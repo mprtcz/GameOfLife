@@ -29,20 +29,26 @@ public class Controller {
     private int size;
     private BoardOperator boardOperator;
     private Game game;
-    private ExecutorService executorService = Executors.newSingleThreadExecutor();
+    private ExecutorService executorService;
 
     @FXML
-    void initialize() {
+    void initialize() throws InterruptedException {
         size = (int) sizeSlider.getValue();
         Board board = new Board(mainGridPane);
         boardOperator = new BoardOperator(size, board);
+        System.out.println(Thread.activeCount());
         executorService = Executors.newSingleThreadExecutor();
         executorService.submit(boardOperator::initializeBoard);
+        System.out.println("mainGridPane = " + mainGridPane.getParent().getParent().getClass());
     }
 
     @FXML
     void onStartButtonCLicked() {
         sizeSlider.setDisable(true);
+        mainGridPane.getParent().getParent().getScene().getWindow().setOnCloseRequest(event -> {
+            executorService.shutdownNow();
+            System.exit(0);
+        });
         game = new Game(boardOperator);
         game.setDelay(speedSlider.getValue());
         ExecutorService executorService = Executors.newSingleThreadExecutor();
@@ -56,7 +62,7 @@ public class Controller {
     }
 
     @FXML
-    void onSizeSliderChanged() {
+    void onSizeSliderChanged() throws InterruptedException {
         clearTheGridPane();
         size = (int) sizeSlider.getValue();
         Board board = new Board(mainGridPane);
@@ -81,7 +87,7 @@ public class Controller {
         game.terminate();
         sizeSlider.setDisable(false);
         executorService.awaitTermination(1, TimeUnit.SECONDS);
-        executorService.shutdownNow();
+        System.out.println("is shutwodn = " + executorService.isShutdown());
     }
 
     @FXML

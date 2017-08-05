@@ -14,7 +14,7 @@ import static com.mprtcz.gameoflife.styles.Status.*;
  * @author Michal_Partacz
  */
 public class Game {
-    private static final boolean MULTITHREADED = true;
+    private static final boolean MULTITHREADED = false;
     private int delay = 100;
     private boolean isRunning;
 
@@ -28,30 +28,38 @@ public class Game {
         System.out.println("Game.runTheGame");
         isRunning = true;
         while (isRunning) {
-                Thread.sleep(delay);
+            Thread.sleep(delay);
             Map<Integer, Status> newStatusesMap;
+            Map<Integer, Tile> currentBoard = boardOperator.getBoardsMap();
             if (MULTITHREADED) {
-                newStatusesMap = computeMultithreaded();
+                newStatusesMap = computeMultithreaded(currentBoard);
             } else {
-                newStatusesMap = computeSingleThread();
+                newStatusesMap = computeSingleThreadAsStream(currentBoard);
             }
             boardOperator.applyNewStatuses(newStatusesMap);
         }
     }
 
-    private Map<Integer, Status> computeSingleThread() {
+    Map<Integer, Status> computeSingleThread(Map<Integer, Tile> currentBoard) {
         Map<Integer, Status> newStatusesMap = new HashMap<>();
-        for (Map.Entry<Integer, Tile> entry : boardOperator.getBoardsMap().entrySet()) {
-            newStatusesMap.put(entry.getKey(), calculateNewStatusOf(entry.getKey()));
+        for (Map.Entry<Integer, Tile> entry : currentBoard.entrySet()) {
+            newStatusesMap.put(entry.getKey(), calculateNewStatusOf(currentBoard, entry.getKey()));
         }
         return newStatusesMap;
     }
 
-    private Map<Integer, Status> computeMultithreaded() {
+    Map<Integer, Status> computeSingleThreadAsStream(Map<Integer, Tile> currentBoard) {
         Map<Integer, Status> newStatusesMap = new HashMap<>();
-        boardOperator.getBoardsMap().entrySet().parallelStream()
+        currentBoard.entrySet().forEach(integerTileEntry -> newStatusesMap.put(integerTileEntry.getKey(),
+                calculateNewStatusOf(currentBoard, integerTileEntry.getKey())));
+        return newStatusesMap;
+    }
+
+    Map<Integer, Status> computeMultithreaded(Map<Integer, Tile> currentBoard) {
+        Map<Integer, Status> newStatusesMap = new HashMap<>();
+        currentBoard.entrySet().parallelStream()
                 .forEach(integerTileEntry -> newStatusesMap.put(integerTileEntry.getKey(),
-                        calculateNewStatusOf(integerTileEntry.getKey())));
+                        calculateNewStatusOf(currentBoard, integerTileEntry.getKey())));
         return newStatusesMap;
     }
 
@@ -63,12 +71,12 @@ public class Game {
         this.delay = (int) delay;
     }
 
-    private Status calculateNewStatusOf(int tileIndex) {
+    private Status calculateNewStatusOf(Map<Integer, Tile> currentMap, int tileIndex) {
         List<Integer> adjacentIndexes = Adjacency.getAllAdjacentIndexesOf(tileIndex, boardOperator.getWidth());
-        long howManyAdjacentAlive = boardOperator.getBoardsMap().entrySet()
+        long howManyAdjacentAlive = currentMap.entrySet()
                 .stream().filter(integerTileEntry -> adjacentIndexes.contains(integerTileEntry.getKey()))
                 .filter(integerTileEntry -> integerTileEntry.getValue().getTileStatus() == ALIVE).count();
-        Tile currentTile = boardOperator.getBoardsMap().get(tileIndex);
+        Tile currentTile = currentMap.get(tileIndex);
         if ((currentTile.getTileStatus() == DEAD || currentTile.getTileStatus() == VISITED)
                 && howManyAdjacentAlive == 3) {
             return ALIVE;
