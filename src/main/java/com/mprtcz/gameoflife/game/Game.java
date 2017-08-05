@@ -14,6 +14,7 @@ import static com.mprtcz.gameoflife.styles.Status.*;
  * @author Michal_Partacz
  */
 public class Game {
+    private static final boolean MULTITHREADED = true;
     private int delay = 100;
     private boolean isRunning;
 
@@ -26,17 +27,32 @@ public class Game {
     public void runTheGame() throws InterruptedException {
         System.out.println("Game.runTheGame");
         isRunning = true;
-        while(isRunning) {
-            Thread.sleep(delay);
-            Map<Integer, Status> newStatusesMap = new HashMap<>();
-//            for (Map.Entry<Integer, Tile> entry : boardOperator.getBoardsMap().entrySet()) {
-//                newStatusesMap.put(entry.getKey(), calculateNewStatusOf(entry.getKey()));
-//            }
-            boardOperator.getBoardsMap().entrySet().parallelStream()
-                    .forEach(integerTileEntry -> newStatusesMap.put(integerTileEntry.getKey(),
-                            calculateNewStatusOf(integerTileEntry.getKey())));
-            isRunning = boardOperator.applyNewStatuses(newStatusesMap);
+        while (isRunning) {
+                Thread.sleep(delay);
+            Map<Integer, Status> newStatusesMap;
+            if (MULTITHREADED) {
+                newStatusesMap = computeMultithreaded();
+            } else {
+                newStatusesMap = computeSingleThread();
+            }
+            boardOperator.applyNewStatuses(newStatusesMap);
         }
+    }
+
+    private Map<Integer, Status> computeSingleThread() {
+        Map<Integer, Status> newStatusesMap = new HashMap<>();
+        for (Map.Entry<Integer, Tile> entry : boardOperator.getBoardsMap().entrySet()) {
+            newStatusesMap.put(entry.getKey(), calculateNewStatusOf(entry.getKey()));
+        }
+        return newStatusesMap;
+    }
+
+    private Map<Integer, Status> computeMultithreaded() {
+        Map<Integer, Status> newStatusesMap = new HashMap<>();
+        boardOperator.getBoardsMap().entrySet().parallelStream()
+                .forEach(integerTileEntry -> newStatusesMap.put(integerTileEntry.getKey(),
+                        calculateNewStatusOf(integerTileEntry.getKey())));
+        return newStatusesMap;
     }
 
     public void terminate() {
@@ -53,18 +69,18 @@ public class Game {
                 .stream().filter(integerTileEntry -> adjacentIndexes.contains(integerTileEntry.getKey()))
                 .filter(integerTileEntry -> integerTileEntry.getValue().getTileStatus() == ALIVE).count();
         Tile currentTile = boardOperator.getBoardsMap().get(tileIndex);
-        if((currentTile.getTileStatus() == DEAD || currentTile.getTileStatus() == VISITED)
+        if ((currentTile.getTileStatus() == DEAD || currentTile.getTileStatus() == VISITED)
                 && howManyAdjacentAlive == 3) {
             return ALIVE;
         }
-        if(currentTile.getTileStatus() == ALIVE) {
-            if(howManyAdjacentAlive < 2) {
+        if (currentTile.getTileStatus() == ALIVE) {
+            if (howManyAdjacentAlive < 2) {
                 return DEAD;
             }
-            if(howManyAdjacentAlive > 3) {
+            if (howManyAdjacentAlive > 3) {
                 return DEAD;
             }
-            if(howManyAdjacentAlive >= 2 && howManyAdjacentAlive <=3) {
+            if (howManyAdjacentAlive >= 2 && howManyAdjacentAlive <= 3) {
                 return ALIVE;
             }
         }

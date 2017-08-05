@@ -57,7 +57,7 @@ public enum Adjacency {
     LOWER_RIGHT {
         @Override
         public int getAdjacentIndex(int index, int boardWidth) {
-            return ABOVE.getAdjacentIndex(RIGHT.getAdjacentIndex(index, boardWidth), boardWidth);
+            return BELOW.getAdjacentIndex(RIGHT.getAdjacentIndex(index, boardWidth), boardWidth);
         }
     };
 

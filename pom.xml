@@ -11,6 +11,7 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <compiler.plugin.version>3.6.1</compiler.plugin.version>
+    <testng.version>6.11</testng.version>
     <java.version>1.8</java.version>
 </properties>
     <build>
@@ -26,4 +27,11 @@
             </plugin>
         </plugins>
     </build>
+    <dependencies>
+        <dependency>
+            <groupId>org.testng</groupId>
+            <artifactId>testng</artifactId>
+            <version>${testng.version}}</version>
+        </dependency>
+    </dependencies>
 </project>

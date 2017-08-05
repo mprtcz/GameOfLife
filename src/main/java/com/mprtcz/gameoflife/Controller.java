@@ -8,6 +8,10 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Slider;
 import javafx.scene.layout.GridPane;
 
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+
 /**
  * @author Michal_Partacz
  */
@@ -25,13 +29,15 @@ public class Controller {
     private int size;
     private BoardOperator boardOperator;
     private Game game;
+    private ExecutorService executorService = Executors.newSingleThreadExecutor();
 
     @FXML
     void initialize() {
         size = (int) sizeSlider.getValue();
         Board board = new Board(mainGridPane);
         boardOperator = new BoardOperator(size, board);
-        new Thread(boardOperator::initializeBoard).start();
+        executorService = Executors.newSingleThreadExecutor();
+        executorService.submit(boardOperator::initializeBoard);
     }
 
     @FXML
@@ -39,13 +45,14 @@ public class Controller {
         sizeSlider.setDisable(true);
         game = new Game(boardOperator);
         game.setDelay(speedSlider.getValue());
-        new Thread(() -> {
+        ExecutorService executorService = Executors.newSingleThreadExecutor();
+        executorService.submit(() -> {
             try {
                 game.runTheGame();
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-        }).start();
+        });
     }
 
     @FXML
@@ -54,12 +61,13 @@ public class Controller {
         size = (int) sizeSlider.getValue();
         Board board = new Board(mainGridPane);
         boardOperator = new BoardOperator(size, board);
-        new Thread(boardOperator::initializeBoard).start();
+        executorService.submit(boardOperator::initializeBoard);
     }
 
     @FXML
     void onSpeedSliderChanged() {
-        game.setDelay(speedSlider.getValue());
+        if (game != null)
+            game.setDelay(speedSlider.getValue());
     }
 
     private void clearTheGridPane() {
@@ -69,9 +77,11 @@ public class Controller {
     }
 
     @FXML
-    void onTerminateButtonClicked(){
+    void onTerminateButtonClicked() throws InterruptedException {
         game.terminate();
         sizeSlider.setDisable(false);
+        executorService.awaitTermination(1, TimeUnit.SECONDS);
+        executorService.shutdownNow();
     }
 
     @FXML
