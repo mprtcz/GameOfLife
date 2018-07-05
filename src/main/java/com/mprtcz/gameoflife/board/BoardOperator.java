@@ -13,7 +13,6 @@ import java.util.Map;
 import java.util.Random;
 
 import static com.mprtcz.gameoflife.calc.Adjacency.getIndexFromXY;
-import static com.mprtcz.gameoflife.logger.AppLogger.DEFAULT_LEVEL;
 
 /**
  * @author Michal_Partacz
@@ -30,13 +29,14 @@ public class BoardOperator {
         this.board = board;
     }
 
-    public boolean applyNewStatuses(Map<Integer, Status> statusesMap) {
-        if(statusesMap.equals(oldStatusesMap)) {return false;}
-        for (Map.Entry<Integer, Status> entry: statusesMap.entrySet()){
+    public void applyNewStatuses(Map<Integer, Status> statusesMap) {
+        if (statusesMap.equals(oldStatusesMap)) {
+            return;
+        }
+        for (Map.Entry<Integer, Status> entry : statusesMap.entrySet()) {
             board.getBoard().get(entry.getKey()).changeStatus(entry.getValue());
         }
         oldStatusesMap = statusesMap;
-        return true;
     }
 
     public Map<Integer, Tile> getBoardsMap() {
@@ -48,34 +48,34 @@ public class BoardOperator {
     }
 
     public void initializeBoard() {
-        AppLogger.logger.log(DEFAULT_LEVEL, "Attempting to fill the board with buttons");
+        AppLogger.logDefault("Attempting to fill the board with buttons");
         fillTheBoard(board.getGridPane());
     }
 
     private void fillTheBoard(GridPane gridPane) {
         for (int column = 0; column < width; column++) {
-            AppLogger.logger.log(DEFAULT_LEVEL, "Adding row constraints for column " +column);
+            AppLogger.logDefault("Adding row constraints for column " + column);
             Platform.runLater(() -> gridPane.getRowConstraints().add(new RowConstraints(FIELD_SIZE)));
             for (int row = 0; row < width; row++) {
                 if (column == 0 && row == 0) {
-                    AppLogger.logger.log(DEFAULT_LEVEL, "Adding column constraints for row " +row);
+                    AppLogger.logDefault("Adding column constraints for row " + row);
                     Platform.runLater(() -> gridPane.getColumnConstraints().add(new ColumnConstraints(FIELD_SIZE)));
                 } else if (column == 0) {
-                    AppLogger.logger.log(DEFAULT_LEVEL, "Adding column constraints for row " +row);
+                    AppLogger.logDefault("Adding column constraints for row " + row);
                     Platform.runLater(() -> gridPane.getColumnConstraints().add(new ColumnConstraints(FIELD_SIZE)));
                 } else {
                     createNewBoardTileAndAddIt(column, row);
                 }
             }
         }
-        AppLogger.logger.log(DEFAULT_LEVEL, "Creation completed");
+        AppLogger.logDefault("Creation completed");
     }
 
     private void createNewBoardTileAndAddIt(int column, int row) {
-        AppLogger.logger.log(DEFAULT_LEVEL, String.format("Creating a tile for column %d and row %d", column, row));
+        AppLogger.logDefault(String.format("Creating a tile for column %d and row %d", column, row));
         Tile tile = new Tile();
         board.getBoard().put(getIndexFromXY(row, column, width), tile);
-        AppLogger.logger.log(DEFAULT_LEVEL, "Adding to board...");
+        AppLogger.logDefault("Adding to board...");
         Platform.runLater(() -> board.getGridPane().add(tile, column, row));
     }
 
@@ -87,7 +87,6 @@ public class BoardOperator {
     }
 
     public void clearBoard() {
-        board.getBoard().entrySet().forEach(integerTileEntry ->
-                integerTileEntry.getValue().changeStatus(Status.DEFAULT));
+        board.getBoard().forEach((key, value) -> value.changeStatus(Status.DEFAULT));
     }
 }

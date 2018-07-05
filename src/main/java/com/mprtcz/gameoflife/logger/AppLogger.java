@@ -10,8 +10,8 @@ import java.util.logging.*;
  * @author Michal_Partacz
  */
 public class AppLogger {
-    public static final Logger logger = Logger.getLogger(AppLogger.class.getName());
-    static Handler handler = null;
+    private static final Logger logger = Logger.getLogger(AppLogger.class.getName());
+    private static Handler handler = null;
     public static final Level DEFAULT_LEVEL = Level.CONFIG;
     private static boolean isInitialized = false;
 
@@ -32,6 +32,10 @@ public class AppLogger {
         logger.addHandler(handler);
         logger.setLevel(Level.CONFIG);
         isInitialized = true;
+    }
+
+    public static void logDefault(String message) {
+        logger.log(DEFAULT_LEVEL, message);
     }
 
     private AppLogger() {}

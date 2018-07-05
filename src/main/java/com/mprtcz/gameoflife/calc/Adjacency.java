@@ -71,8 +71,7 @@ public enum Adjacency {
     }
 
     public static int getIndexFromXY(int x, int y, int width) {
-        if(x < 0 || y < 0 ||
-                x >= width || y >= width) {return -1;}
+        if(x < 0 || y < 0 || x >= width || y >= width) {return -1;}
         return y * width + x;
     }
 

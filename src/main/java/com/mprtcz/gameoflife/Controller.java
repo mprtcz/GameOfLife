@@ -32,14 +32,13 @@ public class Controller {
     private ExecutorService executorService;
 
     @FXML
-    void initialize() throws InterruptedException {
+    void initialize() {
         size = (int) sizeSlider.getValue();
         Board board = new Board(mainGridPane);
         boardOperator = new BoardOperator(size, board);
         System.out.println(Thread.activeCount());
         executorService = Executors.newSingleThreadExecutor();
         executorService.submit(boardOperator::initializeBoard);
-        System.out.println("mainGridPane = " + mainGridPane.getParent().getParent().getClass());
     }
 
     @FXML
@@ -62,7 +61,7 @@ public class Controller {
     }
 
     @FXML
-    void onSizeSliderChanged() throws InterruptedException {
+    void onSizeSliderChanged() {
         clearTheGridPane();
         size = (int) sizeSlider.getValue();
         Board board = new Board(mainGridPane);
@@ -87,7 +86,6 @@ public class Controller {
         game.terminate();
         sizeSlider.setDisable(false);
         executorService.awaitTermination(1, TimeUnit.SECONDS);
-        System.out.println("is shutwodn = " + executorService.isShutdown());
     }
 
     @FXML

@@ -10,7 +10,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import static com.mprtcz.gameoflife.logger.AppLogger.DEFAULT_LEVEL;
 import static com.mprtcz.gameoflife.styles.Status.*;
 
 /**
@@ -28,7 +27,6 @@ public class Game {
     }
 
     public void runTheGame() throws InterruptedException {
-        System.out.println("Game.runTheGame");
         isRunning = true;
         while (isRunning) {
             Thread.sleep(delay);
@@ -53,18 +51,18 @@ public class Game {
 
     Map<Integer, Status> computeSingleThreadAsStream(Map<Integer, Tile> currentBoard) {
         Map<Integer, Status> newStatusesMap = new HashMap<>();
-        currentBoard.entrySet().forEach(integerTileEntry -> newStatusesMap.put(integerTileEntry.getKey(),
-                calculateNewStatusOf(currentBoard, integerTileEntry.getKey())));
+        currentBoard.forEach((key, value) -> newStatusesMap.put(key,
+                calculateNewStatusOf(currentBoard, key)));
         return newStatusesMap;
     }
 
     Map<Integer, Status> computeMultithreaded(Map<Integer, Tile> currentBoard) {
-        AppLogger.logger.log(DEFAULT_LEVEL, "Size of the input map = " + currentBoard.size());
+        AppLogger.logDefault("Size of the input map = " + currentBoard.size());
         Map<Integer, Status> newStatusesMap = new ConcurrentHashMap<>();
         currentBoard.entrySet().parallelStream()
                 .forEach(integerTileEntry -> newStatusesMap.put(integerTileEntry.getKey(),
                         calculateNewStatusOf(currentBoard, integerTileEntry.getKey())));
-        AppLogger.logger.log(DEFAULT_LEVEL, "Size of the computed map = " + newStatusesMap.size());
+        AppLogger.logDefault("Size of the computed map = " + newStatusesMap.size());
         return newStatusesMap;
     }
 
@@ -93,9 +91,7 @@ public class Game {
             if (howManyAdjacentAlive > 3) {
                 return DEAD;
             }
-            if (howManyAdjacentAlive >= 2 && howManyAdjacentAlive <= 3) {
-                return ALIVE;
-            }
+            return ALIVE;
         }
         return DEAD;
     }

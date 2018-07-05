@@ -9,7 +9,6 @@ import javafx.scene.control.Button;
  */
 public class Tile extends Button {
     private static final double MAX_SIZE = 1000;
-    boolean isAlive = false;
     private Status tileStatus = Status.DEAD;
 
     public Status getTileStatus() {
@@ -19,20 +18,6 @@ public class Tile extends Button {
     public Tile() {
         setMaxSize(MAX_SIZE, MAX_SIZE);
         this.setOnAction(event -> setOppositeState());
-    }
-
-    public void kill() {
-        if(tileStatus == Status.ALIVE) {
-            tileStatus = Status.VISITED;
-        } else {
-            tileStatus = Status.DEAD;
-        }
-        colorTheButton();
-    }
-
-    public void revive() {
-        tileStatus = Status.ALIVE;
-        colorTheButton();
     }
 
     public void changeStatus(Status newStatus) {
@@ -58,5 +43,4 @@ public class Tile extends Button {
         }
         colorTheButton();
     }
-
 }

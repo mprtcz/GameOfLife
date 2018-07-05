@@ -11,24 +11,23 @@ import java.util.Map;
  */
 public class Board {
 
-    public void setBoard(Map<Integer, Tile> board) {
-        this.board = board;
-    }
+    private Map<Integer, Tile> board;
 
-    Map<Integer, Tile> board;
-    GridPane gridPane;
-
+    private GridPane gridPane;
     public Board(GridPane gridPane) {
         this.gridPane = gridPane;
         this.board = new HashMap<>();
     }
 
-    public Map<Integer, Tile> getBoard() {
+    Map<Integer, Tile> getBoard() {
         return board;
     }
 
-    public GridPane getGridPane() {
-        return gridPane;
+    public void setBoard(Map<Integer, Tile> board) {
+        this.board = board;
     }
 
+    GridPane getGridPane() {
+        return gridPane;
+    }
 }

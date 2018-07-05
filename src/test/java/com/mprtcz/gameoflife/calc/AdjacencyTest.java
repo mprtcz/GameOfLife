@@ -1,7 +1,6 @@
-package java.com.mprtcz.gameoflife.calc;
+package com.mprtcz.gameoflife.calc;
 
 
-import com.mprtcz.gameoflife.calc.Adjacency;
 import org.testng.annotations.Test;
 
 import java.util.Arrays;
