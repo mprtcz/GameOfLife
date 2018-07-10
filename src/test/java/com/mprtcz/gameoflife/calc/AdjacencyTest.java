@@ -15,7 +15,7 @@ import static org.testng.Assert.assertEquals;
 @Test
 public class AdjacencyTest {
 
-    public void testGetXYCoordinates() throws Exception {
+    public void testGetXYCoordinates() {
         int x = 1;
         int y = 1;
         int index = 4;
@@ -25,7 +25,7 @@ public class AdjacencyTest {
         assertEquals(result[y], y);
     }
 
-    public void testGetIndexFromXY() throws Exception {
+    public void testGetIndexFromXY() {
         int x = 1;
         int y = 1;
         int index = 4;
@@ -34,7 +34,7 @@ public class AdjacencyTest {
         assertEquals(result, index);
     }
 
-    public void testGetAllAdjacentIndexesOf() throws Exception {
+    public void testGetAllAdjacentIndexesOf() {
         int index = 4;
         int size = 3;
         List<Integer> result = Adjacency.getAllAdjacentIndexesOf(index, size);
@@ -44,7 +44,7 @@ public class AdjacencyTest {
         assertEquals(expectedResult, result);
     }
 
-    public void testGetAllAdjacentIndexesOf_10size() throws Exception {
+    public void testGetAllAdjacentIndexesOf_10size() {
         int index = 23;
         int size = 10;
         List<Integer> result = Adjacency.getAllAdjacentIndexesOf(index, size);
@@ -53,5 +53,4 @@ public class AdjacencyTest {
         assertEquals(expectedResult.toString(), result.toString());
         assertEquals(expectedResult, result);
     }
-
 }

@@ -75,10 +75,7 @@ public class Game {
     }
 
     private Status calculateNewStatusOf(Map<Integer, Tile> currentMap, int tileIndex) {
-        List<Integer> adjacentIndexes = Adjacency.getAllAdjacentIndexesOf(tileIndex, boardOperator.getWidth());
-        long howManyAdjacentAlive = currentMap.entrySet()
-                .stream().filter(integerTileEntry -> adjacentIndexes.contains(integerTileEntry.getKey()))
-                .filter(integerTileEntry -> integerTileEntry.getValue().getTileStatus() == ALIVE).count();
+        long howManyAdjacentAlive = numberOfAliveAdjacentTiles(currentMap, tileIndex);
         Tile currentTile = currentMap.get(tileIndex);
         if ((currentTile.getTileStatus() == DEAD || currentTile.getTileStatus() == VISITED)
                 && howManyAdjacentAlive == 3) {
@@ -94,5 +91,12 @@ public class Game {
             return ALIVE;
         }
         return DEAD;
+    }
+
+    private long numberOfAliveAdjacentTiles(Map<Integer, Tile> currentMap, int tileIndex) {
+        List<Integer> adjacentIndexes = Adjacency.getAllAdjacentIndexesOf(tileIndex, boardOperator.getWidth());
+        return currentMap.entrySet()
+                .stream().filter(integerTileEntry -> adjacentIndexes.contains(integerTileEntry.getKey()))
+                .filter(integerTileEntry -> integerTileEntry.getValue().getTileStatus() == ALIVE).count();
     }
 }

@@ -12,7 +12,7 @@ import java.util.logging.*;
 public class AppLogger {
     private static final Logger logger = Logger.getLogger(AppLogger.class.getName());
     private static Handler handler = null;
-    public static final Level DEFAULT_LEVEL = Level.CONFIG;
+    private static final Level DEFAULT_LEVEL = Level.CONFIG;
     private static boolean isInitialized = false;
 
     /**

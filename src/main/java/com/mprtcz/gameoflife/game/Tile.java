@@ -11,7 +11,7 @@ public class Tile extends Button {
     private static final double MAX_SIZE = 1000;
     private Status tileStatus = Status.DEAD;
 
-    public Status getTileStatus() {
+    Status getTileStatus() {
         return tileStatus;
     }
 
@@ -36,11 +36,7 @@ public class Tile extends Button {
     }
 
     private void setOppositeState() {
-        if(tileStatus == Status.ALIVE) {
-            tileStatus = Status.DEAD;
-        } else {
-            tileStatus = Status.ALIVE;
-        }
+        tileStatus = Status.getOppositeStatus(tileStatus);
         colorTheButton();
     }
 }

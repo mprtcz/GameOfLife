@@ -3,10 +3,6 @@ package com.mprtcz.gameoflife.board;
 import com.mprtcz.gameoflife.game.Tile;
 import com.mprtcz.gameoflife.logger.AppLogger;
 import com.mprtcz.gameoflife.styles.Status;
-import javafx.application.Platform;
-import javafx.scene.layout.ColumnConstraints;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.RowConstraints;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -33,9 +29,7 @@ public class BoardOperator {
         if (statusesMap.equals(oldStatusesMap)) {
             return;
         }
-        for (Map.Entry<Integer, Status> entry : statusesMap.entrySet()) {
-            board.getBoard().get(entry.getKey()).changeStatus(entry.getValue());
-        }
+        statusesMap.forEach((key, value) -> board.changeBoardStatus(key, value));
         oldStatusesMap = statusesMap;
     }
 
@@ -49,20 +43,20 @@ public class BoardOperator {
 
     public void initializeBoard() {
         AppLogger.logDefault("Attempting to fill the board with buttons");
-        fillTheBoard(board.getGridPane());
+        fillTheBoard();
     }
 
-    private void fillTheBoard(GridPane gridPane) {
+    private void fillTheBoard() {
         for (int column = 0; column < width; column++) {
             AppLogger.logDefault("Adding row constraints for column " + column);
-            Platform.runLater(() -> gridPane.getRowConstraints().add(new RowConstraints(FIELD_SIZE)));
+            board.addRowConstraint(FIELD_SIZE);
             for (int row = 0; row < width; row++) {
                 if (column == 0 && row == 0) {
                     AppLogger.logDefault("Adding column constraints for row " + row);
-                    Platform.runLater(() -> gridPane.getColumnConstraints().add(new ColumnConstraints(FIELD_SIZE)));
+                    board.addColumnConstraint(FIELD_SIZE);
                 } else if (column == 0) {
                     AppLogger.logDefault("Adding column constraints for row " + row);
-                    Platform.runLater(() -> gridPane.getColumnConstraints().add(new ColumnConstraints(FIELD_SIZE)));
+                    board.addColumnConstraint(FIELD_SIZE);
                 } else {
                     createNewBoardTileAndAddIt(column, row);
                 }
@@ -76,7 +70,7 @@ public class BoardOperator {
         Tile tile = new Tile();
         board.getBoard().put(getIndexFromXY(row, column, width), tile);
         AppLogger.logDefault("Adding to board...");
-        Platform.runLater(() -> board.getGridPane().add(tile, column, row));
+        board.addTileToPosition(tile, column, row);
     }
 
     public void randomizeTiles() {
