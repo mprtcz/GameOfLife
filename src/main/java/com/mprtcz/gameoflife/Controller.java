@@ -4,6 +4,7 @@ import com.mprtcz.gameoflife.board.Board;
 import com.mprtcz.gameoflife.board.BoardOperator;
 import com.mprtcz.gameoflife.game.Game;
 import javafx.fxml.FXML;
+import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.Slider;
 import javafx.scene.layout.GridPane;
@@ -39,20 +40,17 @@ public class Controller {
         System.out.println(Thread.activeCount());
         executorService = Executors.newSingleThreadExecutor();
         boardOperator.initializeBoard();
+        setUpCloseRequestListener();
     }
 
     @FXML
     void onStartButtonCLicked() {
-        if(game != null)  {
-            if(game.isGameRunning()) {
-                game.terminate();
+        if (game != null) {
+            if (game.isGameRunning()) {
+                return;
             }
         }
         sizeSlider.setDisable(true);
-        mainGridPane.getParent().getParent().getScene().getWindow().setOnCloseRequest(event -> {
-            executorService.shutdownNow();
-            System.exit(0);
-        });
         game = new Game(boardOperator);
         game.setDelay(speedSlider.getValue());
         executorService.submit(() -> {
@@ -100,5 +98,21 @@ public class Controller {
     @FXML
     void onClearButtonClicked() {
         boardOperator.clearBoard();
+    }
+
+    private void setUpCloseRequestListener() {
+        Parent gridGrandparent = mainGridPane.getParent().getParent();
+        gridGrandparent.sceneProperty()
+                .addListener((observable, oldValue, newValue) ->
+                        newValue.windowProperty().addListener(
+                                (observableWindow, oldWindow, newWindow) -> {
+                                    if (oldWindow == null && newWindow != null) {
+                                        newWindow.setOnCloseRequest(event -> {
+                                            executorService.shutdownNow();
+                                            System.exit(0);
+                                        });
+                                    }
+                                }
+                        ));
     }
 }

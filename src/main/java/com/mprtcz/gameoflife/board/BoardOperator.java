@@ -80,7 +80,7 @@ public class BoardOperator {
                 .forEach(integerTileEntry -> integerTileEntry.getValue().changeStatus(Status.ALIVE));
     }
 
-    public void clearBoard() {
+    public synchronized void clearBoard() {
         board.getBoard().forEach((key, value) -> value.changeStatus(Status.DEFAULT));
     }
 }
