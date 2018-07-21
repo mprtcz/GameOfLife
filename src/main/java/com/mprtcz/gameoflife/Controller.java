@@ -37,7 +37,6 @@ public class Controller {
         size = (int) sizeSlider.getValue();
         Board board = new Board(mainGridPane);
         boardOperator = new BoardOperator(size, board);
-        System.out.println(Thread.activeCount());
         executorService = Executors.newSingleThreadExecutor();
         boardOperator.initializeBoard();
         setUpCloseRequestListener();
@@ -52,7 +51,7 @@ public class Controller {
         }
         sizeSlider.setDisable(true);
         game = new Game(boardOperator);
-        game.setDelay(speedSlider.getValue());
+        game.setDelay(getInverseSliderValue());
         executorService.submit(() -> {
             try {
                 game.runTheGame();
@@ -73,8 +72,13 @@ public class Controller {
 
     @FXML
     void onSpeedSliderChanged() {
-        if (game != null)
-            game.setDelay(speedSlider.getValue());
+        if (game != null) {
+            game.setDelay(getInverseSliderValue());
+        }
+    }
+
+    private int getInverseSliderValue() {
+        return (int) (speedSlider.getMax() - speedSlider.getValue());
     }
 
     private void clearTheGridPane() {
