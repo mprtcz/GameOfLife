@@ -99,4 +99,8 @@ public class Game {
                 .stream().filter(integerTileEntry -> adjacentIndexes.contains(integerTileEntry.getKey()))
                 .filter(integerTileEntry -> integerTileEntry.getValue().getTileStatus() == ALIVE).count();
     }
+
+    public boolean isGameRunning() {
+        return isRunning;
+    }
 }

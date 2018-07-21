@@ -38,11 +38,16 @@ public class Controller {
         boardOperator = new BoardOperator(size, board);
         System.out.println(Thread.activeCount());
         executorService = Executors.newSingleThreadExecutor();
-        executorService.submit(boardOperator::initializeBoard);
+        boardOperator.initializeBoard();
     }
 
     @FXML
     void onStartButtonCLicked() {
+        if(game != null)  {
+            if(game.isGameRunning()) {
+                game.terminate();
+            }
+        }
         sizeSlider.setDisable(true);
         mainGridPane.getParent().getParent().getScene().getWindow().setOnCloseRequest(event -> {
             executorService.shutdownNow();
@@ -50,7 +55,6 @@ public class Controller {
         });
         game = new Game(boardOperator);
         game.setDelay(speedSlider.getValue());
-        ExecutorService executorService = Executors.newSingleThreadExecutor();
         executorService.submit(() -> {
             try {
                 game.runTheGame();
@@ -66,7 +70,7 @@ public class Controller {
         size = (int) sizeSlider.getValue();
         Board board = new Board(mainGridPane);
         boardOperator = new BoardOperator(size, board);
-        executorService.submit(boardOperator::initializeBoard);
+        boardOperator.initializeBoard();
     }
 
     @FXML
